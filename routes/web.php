@@ -13,15 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('http://localhost/info/server', 'InfoController@serverInfo');
-Route::get('http://localhost/info/client', 'InfoController@clientInfo');
-Route::get('http://localhost/info/database', 'InfoController@databaseInfo');
+use App\Http\Controllers\InfoController;
 
- 
-Route::get('/user', [UserController::class, 'index']);
+Route::get('/info/server', [InfoController::class, 'phpInfo']);
+Route::get('/info/client', [InfoController::class, 'clientInfo']);
+Route::get('/info/database', [InfoController::class, 'databaseInfo']);
 
- 
-Route::get(‘/hello', function () {
-    return 'Hello World';
-});
+
 
