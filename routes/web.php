@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/info/server', 'InfoController@serverInfo');
-Route::get('/info/client', 'InfoController@clientInfo');
-Route::get('/info/database', 'InfoController@databaseInfo');
+Route::get('http://localhost/info/server', 'InfoController@serverInfo');
+Route::get('http://localhost/info/client', 'InfoController@clientInfo');
+Route::get('http://localhost/info/database', 'InfoController@databaseInfo');
 
  
 Route::get('/user', [UserController::class, 'index']);
