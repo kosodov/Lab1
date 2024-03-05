@@ -12,7 +12,28 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+use App\Http\Controllers\AuthController;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('auth:api')->group(function () {
+    Route::get('/user', [AuthController::class, 'getUser']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/tokens', [AuthController::class, 'getTokens']);
+    Route::post('/revoke-tokens', [AuthController::class, 'revokeTokens']);
 });
+
+use App\Http\Controllers\InfoController;
+
+Route::get('/info/server', [InfoController::class, 'phpInfo']);
+Route::get('/info/client', [InfoController::class, 'clientInfo']);
+Route::get('/info/database', [InfoController::class, 'databaseInfo']);
+
+ 
+Route::get('/user', [UserController::class, 'index']);
+
+ 
+Route::get(‘/hello', function () {
+    return 'Hello World';
+});
+
