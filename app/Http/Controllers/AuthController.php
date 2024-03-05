@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
@@ -13,25 +14,39 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    public function showRegisterForm()
+    {
+        return view('authenticate.register');
+    }
+
+    public function showLoginForm()
+    {
+        return view('authenticate.login');
+    }
+
     public function register(RegisterRequest $request)
     {
         // Реализация метода регистрации
-        $user = // ваш код для создания пользователя;
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+        ]);
 
         // Проверка количества активных токенов
-        $activeTokensCount = auth()->user()->tokens->count();
+        $user = Auth::user();
+        $activeTokensCount = $user->tokens->count();
         $maxActiveTokens = env('MAX_ACTIVE_TOKENS', 5);
 
         if ($activeTokensCount > $maxActiveTokens) {
-            return response()->json(['error' => 'Max active tokens limit exceeded'], 403);
+            return response()->json(['error' => 'Превышен лимит активных токенов'], 403);
         }
-
-        $resource = new UserResourceDTO($user->name, $user->email);
+        $resource = new RegisterResourceDTO($user->name, $user->email);
 
         return response()->json($resource, 201);
     }
 
-    public function login(LoginRequest $request)
+        public function login(LoginRequest $request)
     {
         // Реализация метода авторизации
         try {
@@ -41,7 +56,10 @@ class AuthController extends Controller
 
                 $token = auth()->user()->createToken('API Token', ['expires_in' => $tokenExpirationMinutes * 60]);
 
-                return response()->json(['access_token' => $token->accessToken], 200);
+                $user = Auth::user();
+                $resource = new AuthResourceDTO($user->name, $user->email); // Используем AuthResourceDTO
+
+                return response()->json(['access_token' => $token->accessToken, 'user' => $resource], 200);
             }
 
             return response()->json(['error' => 'Invalid credentials'], 401);
@@ -60,7 +78,7 @@ class AuthController extends Controller
 
             return response()->json($resource, 200);
         } else {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'Неавторизованный запрос'], 401);
         }
     }
 
@@ -70,7 +88,7 @@ class AuthController extends Controller
         $user = Auth::user();
         $user->tokens()->revoke();
 
-        return response()->json(['message' => 'Successfully logged out'], 200);
+        return response()->json(['message' => 'Успешный выход'], 200);
     }
 
     public function getTokens()
@@ -88,6 +106,6 @@ class AuthController extends Controller
         $user = Auth::user();
         $user->tokens()->revoke();
 
-        return response()->json(['message' => 'All tokens revoked successfully'], 200);
+        return response()->json(['message' => 'Все токены успешно отозваны'], 200);
     }
 }

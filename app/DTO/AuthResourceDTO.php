@@ -4,10 +4,12 @@ namespace App\DTO;
 
 class AuthResourceDTO
 {
-    public $token;
+    public $email;
+    public $password;
 
-    public function __construct($token)
+    public function __construct($email, $password)
     {
-        $this->token = $token;
+        $this->email = $email;
+        $this->password = $password;
     }
 }

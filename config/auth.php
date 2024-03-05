@@ -45,6 +45,7 @@ return [
             'driver' => 'token',
             'provider' => 'users',
             'hash' => false,
+            'refresh_token' => true,
         ],
     ],
 
