@@ -2,16 +2,14 @@
 
 namespace App\DTO;
 
-class RegisterRequestDTO
+class RegisterResourceDTO
 {
     public $name;
     public $email;
-    public $password;
 
-    public function __construct($name, $email, $password)
+    public function __construct($name, $email)
     {
         $this->name = $name;
         $this->email = $email;
-        $this->password = $password;
     }
 }

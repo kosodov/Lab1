@@ -34,6 +34,7 @@ class AuthController extends Controller
         ]);
 
         // Проверка количества активных токенов
+        print_r($user);
         $user = Auth::user();
         $activeTokensCount = $user->tokens->count();
         $maxActiveTokens = env('MAX_ACTIVE_TOKENS', 5);

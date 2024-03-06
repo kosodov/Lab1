@@ -3,8 +3,13 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register.form');
-Route::post('/register', [AuthController::class, 'register'])->name('register');
+use App\Http\Controllers\Auth\RegisterController;
+
+
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+
+Route::post('/register', [RegisterController::class, 'register']);
+
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login.form');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
@@ -31,3 +36,7 @@ Route::get('/info/server', [InfoController::class, 'phpInfo']);
 Route::get('/info/client', [InfoController::class, 'clientInfo']);
 Route::get('/info/database', [InfoController::class, 'databaseInfo']);
 
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
